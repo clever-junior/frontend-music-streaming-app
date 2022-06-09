@@ -7,22 +7,22 @@ import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import Search from './pages/Search';
+import searchAlbumsAPI from './services/searchAlbumsAPI';
 import { createUser } from './services/userAPI';
 
 class App extends React.Component {
-    state = {
-      userName: '',
-      isButtonDisabled: true,
-      loading: false,
-      redirect: false,
-    };
+  state = {
+    userName: '',
+    artistName: '',
+    artistNameValue: '',
+    isButtonDisabled: true,
+    loading: false,
+    redirect: false,
+    searchAPIresult: [],
+    notFound: false,
+  };
 
-  onLoginButtonClick = async () => {
-    this.setState({ loading: true });
-    const { userName } = this.state;
-    await createUser({ name: userName });
-    this.setState({ redirect: true });
-  }
+  // funções gerais
 
   onInputChange = ({ target: { name, value, id } }) => {
     const { length } = value;
@@ -35,8 +35,55 @@ class App extends React.Component {
     ? this.setState({ isButtonDisabled: false })
     : this.setState({ isButtonDisabled: true }));
 
+  // função de Login
+
+  onLoginButtonClick = async () => {
+    this.setState({ loading: true });
+    const { userName } = this.state;
+    await createUser({ name: userName });
+    this.setState({ redirect: true, isButtonDisabled: true, loading: false });
+  }
+
+  // função de Pesquisa e validação de pesquisa
+
+  onSearchButtonClick = async () => {
+    this.setState({ loading: true });
+    const { artistNameValue } = this.state;
+    this.searchInputVerify();
+    const result = await searchAlbumsAPI(artistNameValue);
+    this.searchAPIresultVerify(result);
+    this.setState((previousState) => ({
+      artistName: previousState.artistNameValue,
+      loading: false,
+      searchAPIresult: result,
+      artistNameValue: '',
+    }));
+  }
+
+  searchAPIresultVerify = (result) => {
+    if (result.length === 0) {
+      this.setState({ notFound: true });
+    } else {
+      this.setState({ notFound: false });
+    }
+  }
+
+  searchInputVerify = () => {
+    const { artistNameValue } = this.state;
+    if (artistNameValue) { this.setState({ artistName: '' }); }
+  }
+
   render() {
-    const { userName, isButtonDisabled, redirect, loading } = this.state;
+    const {
+      userName,
+      isButtonDisabled,
+      redirect,
+      loading,
+      artistNameValue,
+      artistName,
+      searchAPIresult,
+      notFound,
+    } = this.state;
     return (
       <BrowserRouter>
         <Switch>
@@ -53,8 +100,31 @@ class App extends React.Component {
                 redirect={ redirect }
               />) }
           />
-          <Route exact path="/search" component={ Search } />
-          <Route exact path="/album/:id" component={ Album } />
+          <Route
+            exact
+            path="/search"
+            render={ () => (
+              <Search
+                artistName={ artistName }
+                artistNameValue={ artistNameValue }
+                loading={ loading }
+                onInputChange={ this.onInputChange }
+                isButtonDisabled={ isButtonDisabled }
+                onSearchButtonClick={ this.onSearchButtonClick }
+                searchAPIresult={ searchAPIresult }
+                notFound={ notFound }
+              />) }
+          />
+          <Route
+            exact
+            path="/album/:id"
+            render={ ({ match: { params } }) => (
+              <Album
+                searchAPIresult={ searchAPIresult }
+                id={ params.id }
+                artistName={ artistName }
+              />) }
+          />
           <Route exact path="/favorites" component={ Favorites } />
           <Route exact path="/profile" component={ Profile } />
           <Route exact path="/profile/edit" component={ ProfileEdit } />
