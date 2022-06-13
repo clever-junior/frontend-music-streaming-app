@@ -70,16 +70,7 @@ Search.propTypes = {
   isButtonDisabled: PropTypes.bool.isRequired,
   onInputChange: PropTypes.func.isRequired,
   onSearchButtonClick: PropTypes.func.isRequired,
-  searchAPIresult: PropTypes.shape([{
-    artistId: PropTypes.number.isRequired,
-    artistName: PropTypes.string.isRequired,
-    collectionId: PropTypes.number.isRequired,
-    collectionName: PropTypes.string.isRequired,
-    collectionPrice: PropTypes.number.isRequired,
-    artworkUrl100: PropTypes.string.isRequired,
-    releaseDate: PropTypes.string.isRequired,
-    trackCount: PropTypes.number.isRequired,
-  }]).isRequired,
+  searchAPIresult: PropTypes.shape().isRequired,
 };
 
 export default Search;

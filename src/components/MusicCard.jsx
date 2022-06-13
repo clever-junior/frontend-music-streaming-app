@@ -7,8 +7,9 @@ class MusicList extends Component {
     return (
       <div>
         {
-          musicList.map((music) => (
+          musicList.map((music, index) => (
             <div key={ music.trackNumber }>
+              <p>{`Música ${index + 1}`}</p>
               <p>{music.trackName}</p>
               <audio
                 data-testid="audio-component"
@@ -28,9 +29,10 @@ class MusicList extends Component {
   }
 }
 
-MusicList.propTypes = { musicList: PropTypes.arrayOf(
-  PropTypes.string,
-  PropTypes.number,
-).isRequired };
+MusicList.propTypes = {
+  musicList: PropTypes.shape(
+    PropTypes.array.isRequired,
+  ).isRequired,
+};
 
 export default MusicList;
