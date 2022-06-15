@@ -17,6 +17,7 @@ class Album extends Component {
   async componentDidMount() {
     const { id } = this.props;
     const musicList = await getMusics(id);
+    console.log(musicList);
     this.setState({
       musicList: musicList.slice(1),
       currentAlbum: {
@@ -42,6 +43,8 @@ class Album extends Component {
               key={ track.trackName }
               trackName={ track.trackName }
               previewUrl={ track.previewUrl }
+              trackId={ track.trackId }
+              handleChange={ this.handleChange }
             />))}
           </div>
         </div>
