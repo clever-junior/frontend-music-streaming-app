@@ -1,38 +1,26 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
-class MusicList extends Component {
+class MusicCard extends React.Component {
   render() {
-    const { musicList } = this.props;
+    const { previewUrl, trackName } = this.props;
     return (
       <div>
-        {
-          musicList.map((music, index) => (
-            <div key={ music.trackNumber }>
-              <p>{`Música ${index + 1}`}</p>
-              <p>{music.trackName}</p>
-              <audio
-                data-testid="audio-component"
-                src={ music.previewUrl }
-                controls
-              >
-                <track kind="captions" />
-                O seu navegador não suporta o elemento
-                <code>audio</code>
-              </audio>
-            </div>
-          ))
-        }
+        <p>{trackName}</p>
+        <audio data-testid="audio-component" src={ previewUrl } controls>
+          <track kind="captions" />
+          O seu navegador não suporta o elemento
+          <code>audio</code>
+          .
+        </audio>
       </div>
-
     );
   }
 }
 
-MusicList.propTypes = {
-  musicList: PropTypes.shape(
-    PropTypes.array.isRequired,
-  ).isRequired,
+MusicCard.propTypes = {
+  previewUrl: PropTypes.string.isRequired,
+  trackName: PropTypes.string.isRequired,
 };
 
-export default MusicList;
+export default MusicCard;

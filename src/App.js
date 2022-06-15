@@ -73,6 +73,8 @@ class App extends React.Component {
     if (artistNameValue) { this.setState({ artistName: '' }); }
   }
 
+  //
+
   render() {
     const {
       userName,
@@ -120,9 +122,7 @@ class App extends React.Component {
             path="/album/:id"
             render={ ({ match: { params } }) => (
               <Album
-                searchAPIresult={ searchAPIresult }
                 id={ params.id }
-                artistName={ artistName }
               />) }
           />
           <Route exact path="/favorites" component={ Favorites } />

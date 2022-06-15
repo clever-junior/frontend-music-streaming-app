@@ -2,41 +2,49 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
-import searchAlbumsAPI from '../services/searchAlbumsAPI';
 import MusicCard from '../components/MusicCard';
 
 class Album extends Component {
   state = {
-    currentAlbum: {},
+    currentAlbum: {
+      albumImage: '',
+      collectionName: '',
+      artistName: '',
+    },
     musicList: [],
   }
 
   async componentDidMount() {
-    const { id, artistName } = this.props;
+    const { id } = this.props;
     const musicList = await getMusics(id);
-    musicList.shift();
-    const searchAPIresult = await searchAlbumsAPI(artistName);
-    const currentAlbum = searchAPIresult.find((album) => album.collectionId === +id);
-    this.setState({ currentAlbum, musicList });
-  }
-
-  form = () => {
-    const { currentAlbum, musicList } = this.state;
-    return (
-      <div>
-        <img src={ currentAlbum.artworkUrl100 } alt={ currentAlbum.collectionId } />
-        <h1 data-testid="album-name">{ currentAlbum.collectionName }</h1>
-        <h3 data-testid="artist-name">{ currentAlbum.artistName }</h3>
-        <MusicCard musicList={ musicList } />
-      </div>
-    );
+    this.setState({
+      musicList: musicList.slice(1),
+      currentAlbum: {
+        albumImage: musicList[0].artworkUrl100,
+        collectionName: musicList[0].collectionName,
+        artistName: musicList[0].artistName,
+      } });
   }
 
   render() {
+    const { musicList, currentAlbum } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
-        { this.form() }
+        <div>
+          <div>
+            <img src={ currentAlbum.albumImage } alt={ currentAlbum.collectionName } />
+            <h1 data-testid="album-name">{ currentAlbum.collectionName }</h1>
+            <h3 data-testid="artist-name">{ currentAlbum.artistName }</h3>
+          </div>
+          <div>
+            {musicList.map((track) => (<MusicCard
+              key={ track.trackName }
+              trackName={ track.trackName }
+              previewUrl={ track.previewUrl }
+            />))}
+          </div>
+        </div>
       </div>
     );
   }
@@ -44,6 +52,5 @@ class Album extends Component {
 
 Album.propTypes = {
   id: PropTypes.string.isRequired,
-  artistName: PropTypes.string.isRequired,
 };
 export default Album;

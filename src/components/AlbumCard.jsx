@@ -26,14 +26,10 @@ class AlbumCard extends Component {
 
 AlbumCard.propTypes = {
   searchAPIresult: PropTypes.shape([{
-    artistId: PropTypes.number.isRequired,
     artistName: PropTypes.string.isRequired,
     collectionId: PropTypes.number.isRequired,
     collectionName: PropTypes.string.isRequired,
-    collectionPrice: PropTypes.number.isRequired,
     artworkUrl100: PropTypes.string.isRequired,
-    releaseDate: PropTypes.string.isRequired,
-    trackCount: PropTypes.number.isRequired,
   }]).isRequired,
 };
 
