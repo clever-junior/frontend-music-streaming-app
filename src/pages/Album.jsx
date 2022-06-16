@@ -20,7 +20,6 @@ class Album extends Component {
     const { id } = this.props;
     const musicList = await getMusics(id);
     const favorites = await getFavoriteSongs();
-    console.log(favorites);
     this.setState({
       favorites,
       musicList: musicList.slice(1),
@@ -29,6 +28,11 @@ class Album extends Component {
         collectionName: musicList[0].collectionName,
         artistName: musicList[0].artistName,
       } });
+  }
+
+  async reload() {
+    const favorites = await getFavoriteSongs();
+    return favorites;
   }
 
   render() {
@@ -49,7 +53,7 @@ class Album extends Component {
               previewUrl={ track.previewUrl }
               trackId={ track.trackId }
               favorites={ favorites }
-              handleChange={ this.handleChange }
+              reload={ this.reload }
             />))}
           </div>
         </div>
