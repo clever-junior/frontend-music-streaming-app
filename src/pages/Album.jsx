@@ -20,6 +20,7 @@ class Album extends Component {
     const { id } = this.props;
     const musicList = await getMusics(id);
     const favorites = await getFavoriteSongs();
+    console.log(favorites);
     this.setState({
       favorites,
       musicList: musicList.slice(1),
