@@ -9,6 +9,13 @@ class MusicCard extends React.Component {
     isFavorite: false,
   }
 
+  componentDidMount() {
+    const { favorites, trackId } = this.props;
+    if (favorites.find((track) => track.trackId === trackId)) {
+      this.setState({ isFavorite: true });
+    }
+  }
+
   addToFavorites = async () => {
     this.setState((previousState) => ({
       loading: true, isFavorite: !previousState.isFavorite,
@@ -52,6 +59,9 @@ MusicCard.propTypes = {
   previewUrl: PropTypes.string.isRequired,
   trackName: PropTypes.string.isRequired,
   trackId: PropTypes.number.isRequired,
+  favorites: PropTypes.shape([{
+    trackId: PropTypes.number.isRequired,
+  }]).isRequired,
 };
 
 export default MusicCard;
